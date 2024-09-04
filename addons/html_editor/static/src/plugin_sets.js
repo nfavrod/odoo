@@ -33,6 +33,7 @@ import { IconPlugin } from "./main/media/icon_plugin";
 import { ImageCropPlugin } from "./main/media/image_crop_plugin";
 import { MediaPlugin } from "./main/media/media_plugin";
 import { MoveNodePlugin } from "./main/movenode_plugin";
+import { PowerButtonsPlugin } from "./main/power_buttons_plugin";
 import { PositionPlugin } from "./main/position_plugin";
 import { PowerboxPlugin } from "./main/powerbox/powerbox_plugin";
 import { SearchPowerboxPlugin } from "./main/powerbox/search_powerbox_plugin";
@@ -101,6 +102,7 @@ export const MAIN_PLUGINS = [
     LinkPastePlugin,
     LinkSelectionPlugin,
     OdooLinkSelectionPlugin,
+    PowerButtonsPlugin,
     MoveNodePlugin,
     LocalOverlayPlugin,
     PositionPlugin,

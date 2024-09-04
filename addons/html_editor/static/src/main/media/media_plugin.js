@@ -22,12 +22,13 @@ export class MediaPlugin extends Plugin {
         const powerboxItems = [];
         if (!p.config.disableImage) {
             powerboxItems.push({
+                id: "image",
                 name: _t("Image"),
                 description: _t("Insert an image"),
                 category: "media",
                 fontawesome: "fa-file-image-o",
-                action() {
-                    p.openMediaDialog();
+                async action() {
+                    await p.openMediaDialog();
                 },
             });
         }
@@ -63,6 +64,7 @@ export class MediaPlugin extends Plugin {
                 },
             ],
             isUnsplittable: isIconElement, // avoid merge
+            powerButtons: ["image"],
         };
         return resources;
     };
@@ -159,27 +161,35 @@ export class MediaPlugin extends Plugin {
 
     openMediaDialog(params = {}) {
         const { resModel, resId, field, type } = this.recordInfo;
-        this.services.dialog.add(
-            MediaDialog,
-            {
-                resModel,
-                resId,
-                useMediaLibrary: !!(
-                    field &&
-                    ((resModel === "ir.ui.view" && field === "arch") || type === "html")
-                ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
-                media: params.node,
-                save: (element) => {
-                    this.onSaveMediaDialog(element, { node: params.node });
+        const mediaDialogClosedPromise = new Promise((resolve) => {
+            this.services.dialog.add(
+                MediaDialog,
+                {
+                    resModel,
+                    resId,
+                    useMediaLibrary: !!(
+                        field &&
+                        ((resModel === "ir.ui.view" && field === "arch") || type === "html")
+                    ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
+                    media: params.node,
+                    save: (element) => {
+                        this.onSaveMediaDialog(element, { node: params.node });
+                    },
+                    onAttachmentChange: this.config.onAttachmentChange || (() => {}),
+                    noVideos: !!this.config.disableVideo,
+                    noImages: !!this.config.disableImage,
+                    ...this.config.mediaModalParams,
+                    ...params,
                 },
-                onAttachmentChange: this.config.onAttachmentChange || (() => {}),
-                noVideos: !!this.config.disableVideo,
-                noImages: !!this.config.disableImage,
-                ...this.config.mediaModalParams,
-                ...params,
-            },
-            { onClose: () => this.shared.focusEditable() }
-        );
+                {
+                    onClose: () => {
+                        this.shared.focusEditable();
+                        resolve();
+                    },
+                }
+            );
+        });
+        return mediaDialogClosedPromise;
     }
 
     async savePendingImages() {

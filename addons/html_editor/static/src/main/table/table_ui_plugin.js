@@ -16,6 +16,7 @@ export class TableUIPlugin extends Plugin {
     static resources = (p) => ({
         powerboxItems: [
             {
+                id: "table",
                 name: _t("Table"),
                 description: _t("Insert a table"),
                 category: "structure",
@@ -29,6 +30,7 @@ export class TableUIPlugin extends Plugin {
                 },
             },
         ],
+        powerButtons: ["table"],
     });
 
     setup() {

@@ -161,6 +161,7 @@ export class LinkPlugin extends Plugin {
             powerboxCategory: { id: "navigation", name: _t("Navigation"), sequence: 50 },
             powerboxItems: [
                 {
+                    id: "link",
                     name: _t("Link"),
                     description: _t("Add a link"),
                     category: "navigation",
@@ -182,6 +183,7 @@ export class LinkPlugin extends Plugin {
             onSelectionChange: p.handleSelectionChange.bind(p),
             split_element_block: { callback: p.handleSplitBlock.bind(p) },
             handle_insert_line_break_element: { callback: p.handleInsertLineBreak.bind(p) },
+            powerButtons: ["link"],
         };
     };
     setup() {
